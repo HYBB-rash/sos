@@ -1,0 +1,14 @@
+server:
+  port: 8433
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.196.131:3306/SOS?
+    username: root
+    password: Hyong430Fbing
+    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    database-platform: org.hibernate.dialect.MySQLDialect
