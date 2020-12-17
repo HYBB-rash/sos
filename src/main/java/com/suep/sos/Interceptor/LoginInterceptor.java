@@ -2,6 +2,10 @@ package com.suep.sos.Interceptor;
 
 import com.suep.sos.Entity.User;
 import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,21 +16,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HttpSession session = request.getSession();
-        String contextPath = session.getServletContext().getContextPath();
-        String[] requireAuthPages = {"index"};
-        String uri = request.getRequestURI();
-
-        uri = StringUtils.remove(uri, contextPath + "/");
-        String page = uri;
-        if (begingWith(page, requireAuthPages)) {
-            Integer id = (Integer) session.getAttribute("user");
-            if (id == null) {
-                response.sendRedirect("login");
-                return false;
-            }
+        if (HttpMethod.OPTIONS.toString().equals(request.getMethod())) {
+            response.setStatus(HttpStatus.NO_CONTENT.value());
+            return true;
         }
-        return true;
+        Subject subject = SecurityUtils.getSubject();
+        return subject.isAuthenticated() || subject.isRemembered();
     }
 
     private boolean begingWith(String page, String[] requireAuthPages) {
