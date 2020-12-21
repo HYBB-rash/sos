@@ -3,7 +3,6 @@ package com.suep.sos.Controller;
 import com.suep.sos.Entity.User;
 import com.suep.sos.Result.Result;
 import com.suep.sos.Result.ResultFactory;
-import com.suep.sos.Service.Implementation.UserServiceImp;
 import com.suep.sos.Service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
