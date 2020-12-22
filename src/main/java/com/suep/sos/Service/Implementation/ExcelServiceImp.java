@@ -1,97 +1,37 @@
-package com.suep.sos;
+package com.suep.sos.Service.Implementation;
 
-import com.suep.sos.Entity.SimpleAnswer;
 import com.suep.sos.Entity.Vue.RowData;
 import com.suep.sos.Entity.Vue.VueAnalyze;
+import com.suep.sos.Entity.Vue.VueSurvey;
 import com.suep.sos.Service.AnswerService;
-import com.suep.sos.Service.Implementation.UserServiceImp;
+import com.suep.sos.Service.ExcelService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.WorkbookUtil;
-import org.junit.jupiter.api.Test;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-@SpringBootTest
-class SosApplicationTests {
+@Service
+public class ExcelServiceImp implements ExcelService {
 
-    @Autowired
-    UserServiceImp userService;
     @Autowired
     AnswerService answerService;
 
-    @Test
-    void contextLoads() {
-        System.out.println(userService.get("admin", "123"));;
-        System.out.println(answerService.getAnswerBySurveyId((long)25));
-        VueAnalyze vueAnalyze = new VueAnalyze();
-        ArrayList<Integer> demo = new ArrayList<>();
-        demo.add(1); demo.add(2); demo.add(3); demo.add(4);
-        vueAnalyze.setData(demo);
-        System.out.println(vueAnalyze);
-        vueAnalyze = new VueAnalyze();
-        RowData d = new RowData();
-        d.setName("demo");
-        d.setValue(1234);
-        List<RowData> list = new ArrayList<>();
-        list.add(d);
-        vueAnalyze.setData(list);
-        System.out.println(vueAnalyze);
-    }
+    @Override
+    public String getExcelData(List<VueAnalyze> ans) throws IOException {
+        Date date = new Date();
+        String dataUrl = "excelData/" + date.getTime() + ".xls";
 
-    @Test
-    void testAnsDao() {
-        List<VueAnalyze> ans = answerService.getAnalyzeData((long) 25);
-        System.out.println(ans);
-    }
-
-    @Test
-    void testExcel() throws IOException {
-        Workbook excel = new HSSFWorkbook();
-
-
-        Sheet sheet1 = excel.createSheet("new sheet");
-        Sheet sheet2 = excel.createSheet("new two sheet");
-        String safeName = WorkbookUtil.createSafeSheetName("[O'Brien's sales?]");
-        Sheet sheet3 = excel.createSheet(safeName);
-        FileOutputStream fileOutputStream = new FileOutputStream("excelData/workbook.xls");
-        excel.write(fileOutputStream);
-        fileOutputStream.close();
-
-
-    }
-
-    @Test
-    void testExcel1() throws IOException {
         Workbook wb = new HSSFWorkbook();
         CreationHelper creationHelper = wb.getCreationHelper();
-        Sheet sheet = wb.createSheet("new sheet");
-
-        Row row = sheet.createRow((short)0);
-        Cell cell = row.createCell(0);
-        cell.setCellValue(1);
-
-        row.createCell(1).setCellValue(10);
-        row.createCell(2).setCellValue(creationHelper.createRichTextString("This is a string"));
-        row.createCell(3).setCellValue(true);
-
-        FileOutputStream fileOutputStream = new FileOutputStream("excelData/workbook3.xls");
-        wb.write(fileOutputStream);
-
-        fileOutputStream.close();
-    }
-
-    @Test
-    void realTestExcel() throws IOException {
-        Workbook wb = new HSSFWorkbook();
-        CreationHelper creationHelper = wb.getCreationHelper();
-        List<VueAnalyze> ans = answerService.getAnalyzeData((long) 25);
         Sheet totalSheet = wb.createSheet("汇总");
         int cnt = 0;
         int rowCnt = 0;
@@ -151,9 +91,15 @@ class SosApplicationTests {
 
             rowCnt ++;
         }
-        FileOutputStream fileOutputStream = new FileOutputStream("excelData/workbook4.xls");
+        FileOutputStream fileOutputStream = new FileOutputStream(dataUrl);
         wb.write(fileOutputStream);
 
         fileOutputStream.close();
+        return null;
+    }
+
+    @Override
+    public void loadExcelSurvey(VueSurvey survey) {
+
     }
 }
