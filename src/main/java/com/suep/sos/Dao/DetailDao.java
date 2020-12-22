@@ -11,5 +11,5 @@ public interface DetailDao extends JpaRepository<Detail, Integer> {
     List<Detail> findBySurveyId(Long surveyId);
     Detail findById(Long id);
     Detail findByIdAndSurveyId(Long id, Long surveyId);
-    // to
+    Long countBySurveyId(Long surveyId);
 }

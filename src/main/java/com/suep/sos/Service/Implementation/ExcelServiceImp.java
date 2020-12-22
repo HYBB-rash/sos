@@ -1,5 +1,6 @@
 package com.suep.sos.Service.Implementation;
 
+import com.alibaba.fastjson.JSONObject;
 import com.suep.sos.Entity.Vue.RowData;
 import com.suep.sos.Entity.Vue.VueAnalyze;
 import com.suep.sos.Entity.Vue.VueSurvey;
@@ -59,7 +60,7 @@ public class ExcelServiceImp implements ExcelService {
                     Row row4 = sheet.createRow(1);
                     Row totalRow4 = totalSheet.createRow(rowCnt ++);
                     for (int i = 0; i < analyze.getData().size(); i ++) {
-                        RowData rowData = (RowData) analyze.getData().get(i);
+                        RowData rowData = ((JSONObject)analyze.getData().get(i)).toJavaObject(RowData.class);
                         row3.createCell(i).setCellValue(rowData.getName());
                         totalRow3.createCell(i).setCellValue(rowData.getName());
                         row4.createCell(i).setCellValue(rowData.getValue());
@@ -95,7 +96,7 @@ public class ExcelServiceImp implements ExcelService {
         wb.write(fileOutputStream);
 
         fileOutputStream.close();
-        return null;
+        return dataUrl;
     }
 
     @Override

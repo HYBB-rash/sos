@@ -15,9 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SurveyServiceImp implements SurveyService {
@@ -26,6 +24,7 @@ public class SurveyServiceImp implements SurveyService {
     public static final int End = 0;
     public static final int New = 1;
     public static final int Important = 3;
+    public static final int Send = 4;
 
     @Autowired
     SurveyDao surveyDao;
@@ -34,7 +33,12 @@ public class SurveyServiceImp implements SurveyService {
 
     @Override
     public List<SurveyInfo> getAllSurvey(Integer id) {
-        return surveyDao.findByUserId(id);
+        return surveyDao.findByUserIdAndStatusNot(id, SurveyServiceImp.Trash);
+    }
+
+    @Override
+    public List<SurveyInfo> getAllSurveyByStatus(Integer id, Integer status) {
+        return surveyDao.findByUserIdAndStatus(id, status);
     }
 
     private String getDay(){
@@ -88,10 +92,20 @@ public class SurveyServiceImp implements SurveyService {
         Survey res =  surveyDao.save(storeSurvey);
         System.out.println(res);
         Long id = res.getId();
-        System.out.println(id);
+        retainAllDetails(survey.getForms(), survey.getId());
         for (VueQuestion question : survey.getForms())
             storeDetail(question, id);
         return true;
+    }
+
+    public void retainAllDetails(List<VueQuestion> questions, Long surveyId) {
+        List<Detail> details = detailDao.findBySurveyId(surveyId);
+        Map<Long, Boolean> hashMap = new HashMap<>();
+        for (VueQuestion question : questions)
+            hashMap.put(question.getId(), Boolean.TRUE);
+        for (Detail detail : details)
+            if (!hashMap.containsKey(detail.getId()))
+                detailDao.delete(detail);
     }
 
     private void createVueSurvey(VueSurvey survey, SurveyEditBase surveyInfo, List<Detail> details) {
@@ -132,6 +146,14 @@ public class SurveyServiceImp implements SurveyService {
     public Boolean updateStopStatus(Long id) {
         Integer res = surveyDao.updateStatus(End, id);
         return res == 1;
+    }
+
+    @Override
+    public Boolean setStatus(Long surveyId, int status) {
+        Survey survey = surveyDao.getSurveyById(surveyId);
+        survey.setStatus(status);
+        surveyDao.save(survey);
+        return null;
     }
 
 }

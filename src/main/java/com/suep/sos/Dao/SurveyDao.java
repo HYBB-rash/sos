@@ -14,8 +14,10 @@ import java.util.List;
 @Transactional
 public interface SurveyDao extends JpaRepository<Survey, Integer> {
 
-    List<SurveyInfo> findByUserId(int userId);
+    List<SurveyInfo> findByUserIdAndStatusNot(int userId, int status);
+    List<SurveyInfo> findByUserIdAndStatus(int userId, int status);
     SurveyEditBase findById(Long id);
+    Survey getSurveyById(Long id);
 
     @Modifying
     @Query(value = "update Survey set status = ?1 where id = ?2")

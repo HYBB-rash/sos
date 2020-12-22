@@ -11,8 +11,10 @@ import java.util.List;
 public interface SurveyService {
 
     List<SurveyInfo> getAllSurvey(Integer id);
+    List<SurveyInfo> getAllSurveyByStatus(Integer id, Integer status);
     Boolean storeSurvey(VueSurvey survey);
     VueSurvey getSurvey(Long id);
 
     Boolean updateStopStatus(Long id);
+    Boolean setStatus(Long surveyId, int status);
 }
