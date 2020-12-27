@@ -2,7 +2,7 @@ server:
   port: 8433
 spring:
   datasource:
-    url: jdbc:mysql://192.168.196.131:3306/SOS?
+    url: jdbc:mysql://192.168.196.131:3306/SOS?characterEncoding=UTF-8&serverTimezone=GMT%2B8
     username: root
     password: Hyong430Fbing
     driver-class-name: com.mysql.jdbc.Driver

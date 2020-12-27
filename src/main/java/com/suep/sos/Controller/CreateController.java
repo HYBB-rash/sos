@@ -26,6 +26,7 @@ public class CreateController {
         System.out.println(survey);
         JSONObject jb = JSON.parseObject(survey.toString()).getJSONObject("survey");
         VueSurvey tmp = JSON.parseObject(jb.toJSONString(), VueSurvey.class);
+        System.out.println(tmp.toString());
         try {
             Boolean result = surveyService.storeSurvey(tmp);
             return ResultFactory.buildSuccessResult(result);

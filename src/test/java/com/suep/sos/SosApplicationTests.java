@@ -156,4 +156,11 @@ class SosApplicationTests {
 
         fileOutputStream.close();
     }
+
+    @Test
+    void testShare() {
+        System.out.println("share is ok");
+    }
+
+
 }
