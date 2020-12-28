@@ -17,4 +17,6 @@ public interface SurveyService {
 
     Boolean updateStopStatus(Long id);
     Boolean setStatus(Long surveyId, int status);
+
+    Integer getStatus(Long surveyId);
 }

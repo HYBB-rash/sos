@@ -1,9 +1,6 @@
 package com.suep.sos.Dao;
 
-import com.suep.sos.Entity.Survey;
-import com.suep.sos.Entity.SurveyCount;
-import com.suep.sos.Entity.SurveyEditBase;
-import com.suep.sos.Entity.SurveyInfo;
+import com.suep.sos.Entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -27,5 +24,10 @@ public interface SurveyDao extends JpaRepository<Survey, Integer> {
     @Query(value = "update Survey s set s.count = s.count + 1 where s.id = ?1")
     Integer updateCount(Long id);
 
+    @Modifying
+    @Query(value = "update Survey s set s.count = 0")
+    void resetCount(Long id);
+
     SurveyCount getById(Long id);
+
 }

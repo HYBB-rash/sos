@@ -156,4 +156,10 @@ public class SurveyServiceImp implements SurveyService {
         return null;
     }
 
+    @Override
+    public Integer getStatus(Long surveyId) {
+        return surveyDao.getSurveyById(surveyId).getStatus();
+    }
+
+
 }

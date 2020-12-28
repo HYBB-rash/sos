@@ -115,6 +115,8 @@ public class AnswerServiceImp implements AnswerService {
         return res;
     }
 
+
+
     private void addNode (SimpleAnswer answer, List<VueAnalyze> res) {
 
         Long resId = getListId(answer.getDetailId());
@@ -174,4 +176,9 @@ public class AnswerServiceImp implements AnswerService {
     }
 
 
+    @Override
+    public void clearAnswer(Long surveyId) {
+        answerDao.deleteAnswersBySurveyId(surveyId);
+        surveyDao.resetCount(surveyId);
+    }
 }

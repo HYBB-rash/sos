@@ -35,12 +35,34 @@ public class AnswerController {
     @PostMapping(value = "/api/submit")
     @ResponseBody
     public Result storeAnswer(@RequestBody Object answer) {
-        System.out.println(answer);
-
         JSONObject jb = JSON.parseObject(answer.toString()).getJSONObject("ans");
         VueSurvey tmp = JSON.parseObject(jb.toJSONString(), VueSurvey.class);
 //        System.out.println(tmp);
         answerService.saveAnswer(tmp);
         return ResultFactory.buildSuccessResult(null);
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/api/answer/clear")
+    @ResponseBody
+    public Result clearAnswer(@RequestBody PostId id) {
+        try {
+            answerService.clearAnswer((long)id.getId());
+            return ResultFactory.buildSuccessResult("success");
+        } catch (Exception e) {
+            return ResultFactory.buildFailResult("clearError");
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/api/answer/status")
+    @ResponseBody
+    public Result getSurveyStatus(@RequestBody PostId id) {
+        try {
+            Integer status = surveyService.getStatus((long) id.getId());
+            return ResultFactory.buildSuccessResult(status);
+        } catch (Exception e) {
+            return ResultFactory.buildFailResult("find error");
+        }
     }
 }

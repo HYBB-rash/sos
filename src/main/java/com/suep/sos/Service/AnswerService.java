@@ -13,4 +13,5 @@ public interface AnswerService {
     public Boolean saveAnswer(VueSurvey answer);
     public List<SimpleAnswer> getAnswerBySurveyId(Long surveyId);
     public List<VueAnalyze> getAnalyzeData(Long surveyId);
+    public void clearAnswer(Long surveyId);
 }
