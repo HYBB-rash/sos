@@ -13,4 +13,5 @@ public interface ExcelService {
 
     String getExcelData(List<VueAnalyze> analyze) throws IOException;
     void loadExcelSurvey(VueSurvey survey);
+    String getExcelSurvey (Long surveyID) throws IOException;
 }

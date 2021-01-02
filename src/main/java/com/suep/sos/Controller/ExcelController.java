@@ -2,6 +2,7 @@ package com.suep.sos.Controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.suep.sos.Entity.Vue.PostId;
 import com.suep.sos.Entity.Vue.VueAnalyze;
 import com.suep.sos.Result.Result;
 import com.suep.sos.Result.ResultFactory;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -64,4 +67,33 @@ public class ExcelController {
         }
 //        return ResultFactory.buildSuccessResult(url);
     }
+
+    @CrossOrigin
+    @PostMapping(value = "/api/excel/survey")
+    @ResponseBody
+    public void getSurveyExcel (@RequestBody PostId postId, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println(postId.getId());
+        String url = excelService.getExcelSurvey((long) postId.getId());
+        InputStream inputStream = new FileInputStream(url);
+        Workbook workbook = WorkbookFactory.create(inputStream);
+        try {
+            url = URLEncoder.encode(url, "utf-8").replaceAll("\\+", "%20");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setCharacterEncoding("UTF-8");
+        response.setHeader("Content-type", "application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment;filename="+url);
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        try {
+            OutputStream outputStream = response.getOutputStream();
+            workbook.write(outputStream);
+            outputStream.flush();
+            outputStream.close();
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
